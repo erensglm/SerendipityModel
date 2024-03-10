@@ -1,0 +1,68 @@
+from dotenv import load_dotenv
+import os
+import base64
+from requests import post, get
+import json
+
+load_dotenv()
+
+client_id = os.getenv("CLIENT_ID")
+client_secret = os.getenv("CLIENT_SECRET")
+
+
+def get_token():
+    auth_string = client_id + ":" + client_secret
+    auth_bytes = auth_string.encode("utf-8")
+    auth_base64 = str(base64.b64encode(auth_bytes), "utf8")
+
+    url = "https://accounts.spotify.com/api/token"
+    headers = {
+        "Authorization": "Basic " + auth_base64,
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+    data = {"grant_type": "client_credentials"}
+    result = post(url, headers=headers, data=data)
+    json_result = json.loads(result.content)
+    token = json_result["access_token"]
+    return token
+
+
+def get_auth_header(token):
+    return {"Authorization": "Bearer " + token}
+
+
+def search_for_artist(token, user_top_track):
+    url = "https://api.spotify.com/v1/search"
+    headers = get_auth_header(token)
+    params = {"q": user_top_track, "type": "track", "limit": 1}
+
+    result = get(url, headers=headers, params=params)
+    json_result = json.loads(result.content)
+
+    tracks = json_result.get("tracks", {}).get("items", [])
+
+    if tracks:
+        for artist in tracks[0].get("artists", []):
+            print("Artist Name:", artist.get("name"))
+            print("Artist ID:", artist.get("id"))
+            print("Genres:", artist.get("genres", []))
+
+
+        track_name = tracks[0].get("name", "")
+        if track_name:
+            print("Track Name:", track_name)
+            
+        release_date = tracks[0].get("album", {}).get("release_date", "")
+        if release_date:
+            release_year = release_date.split("-")[0]
+            print("Release Year:", release_year)
+
+        print("External URLs:", artist.get("external_urls", {}))
+        print("-" * 30)
+    else:
+        print(f"No information found for the track: {user_top_track}")
+
+
+token = get_token()
+user_top_track = input("Enter your most listened track: ")
+search_for_artist(token, user_top_track)
