@@ -8,7 +8,7 @@ function About() {
   return (
     
     <div>
-    <Link className="left-arrow" to="/"> {/* left-arrow sınıfını kullanarak sol üst köşede bulunan ok */}
+    <Link className="left-arrow" to="/"> 
       <FontAwesomeIcon icon={faLongArrowAltLeft} />
     </Link>
     <div>bu sayfada bizden bahsedecek</div>
