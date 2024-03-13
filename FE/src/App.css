@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Press Start 2P', sans-serif; /* Fallback to a generic sans-serif font */
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  line-height: 2;
+  background-color: #221;
+  text-transform: uppercase;
+}
+
+a {
+  text-decoration: none;
+  color: #fff090;
+}
+
+ol {
+  list-style-type: none;
+}
+
+li {
+  color: #4FAF44;
+}
+
+.arrow svg {
+  display: none;
+}
+
+.arrow {
+  position: relative;
+  display: block;
+  color: #F6EB14;
+}
+
+.arrow:hover {
+  cursor: pointer;
+  background-color: rgba(0,0,0,0.2);
+}
+
+.arrow:hover svg {
+  display: block;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -2em;
+}
+.left-arrow {
+    position: absolute;
+    top: 20px; /* İstediğiniz yüksekliğe göre ayarlayın */
+    left: 20px; /* İstediğiniz genişliğe göre ayarlayın */
+    color: #000; /* Ok rengi */
+    text-decoration: none; /* Link altı çizgiyi kaldırır */
+    transition: color 0.2s; /* Renk değişimi için geçiş efekti */
+  }
+  
+  .left-arrow:hover {
+    cursor: pointer;
+    color: #FFD700; /* Sarı renk */
+  }
+  
