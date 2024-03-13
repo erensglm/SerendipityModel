@@ -4,7 +4,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Press Start 2P', sans-serif; /* Fallback to a generic sans-serif font */
+  font-family: 'Press Start 2P', sans-serif; 
 }
 
 html, body {
@@ -58,15 +58,15 @@ li {
 }
 .left-arrow {
     position: absolute;
-    top: 20px; /* İstediğiniz yüksekliğe göre ayarlayın */
-    left: 20px; /* İstediğiniz genişliğe göre ayarlayın */
-    color: #000; /* Ok rengi */
-    text-decoration: none; /* Link altı çizgiyi kaldırır */
-    transition: color 0.2s; /* Renk değişimi için geçiş efekti */
+    top: 20px; 
+    left: 20px; 
+    color: #000; 
+    text-decoration: none; 
+    transition: color 0.2s; 
   }
   
   .left-arrow:hover {
     cursor: pointer;
-    color: #FFD700; /* Sarı renk */
+    color: #FFD700; 
   }
   
