@@ -1,13 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Press Start 2P', sans-serif; 
+  font-family: "Press Start 2P", sans-serif;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -17,13 +18,12 @@ body {
   align-items: center;
   font-size: 1rem;
   line-height: 2;
-  background-color: #221;
   text-transform: uppercase;
 }
 
 a {
   text-decoration: none;
-  color: #fff090;
+  color: #eabe6c;
 }
 
 ol {
@@ -31,7 +31,7 @@ ol {
 }
 
 li {
-  color: #4FAF44;
+  color: #4faf44;
 }
 
 .arrow svg {
@@ -41,12 +41,13 @@ li {
 .arrow {
   position: relative;
   display: block;
-  color: #F6EB14;
+  color: #eabe6c;
 }
 
 .arrow:hover {
   cursor: pointer;
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #FFC700;
 }
 
 .arrow:hover svg {
@@ -57,16 +58,52 @@ li {
   left: -2em;
 }
 .left-arrow {
-    position: absolute;
-    top: 20px; 
-    left: 20px; 
-    color: #000; 
-    text-decoration: none; 
-    transition: color 0.2s; 
-  }
-  
-  .left-arrow:hover {
-    cursor: pointer;
-    color: #FFD700; 
-  }
-  
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  color: #eabe6c;
+  text-decoration: none; 
+  transition: color 0.2s; 
+}
+
+.left-arrow:hover {
+  cursor: pointer;
+  color: #FFC700;
+}
+
+.spotify {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  color: #eabe6c;
+}
+
+.serendipity_content {
+  color: #eabe6c;
+}
+
+.spotify:hover {
+  cursor: pointer;
+  color: #FFC700;
+}
+
+.spotify span {
+  margin: 0 10px; 
+}
+
+@font-face {
+  font-family: "arcades";
+  src: url("./fonts/arcades.TTF") format("truetype");
+}
+
+.title-container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.title {
+  font-family: "arcades", sans-serif;
+  font-size: 60px;
+  color: #b784b7;
+}
