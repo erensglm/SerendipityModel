@@ -11,7 +11,7 @@ function Serendipity() {
     <Link className="left-arrow" to="/"> 
       <FontAwesomeIcon icon={faLongArrowAltLeft} />
     </Link>
-    <div>projenin çalışma prensibi açıklanacak vs. amaç, çalışma şekli blabla
+    <div className='serendipity_content'>projenin çalışma prensibi açıklanacak vs. amaç, çalışma şekli blabla
     </div>
   </div>
   )
