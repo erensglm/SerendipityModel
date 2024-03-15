@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLongArrowAltLeft, faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faLongArrowAltLeft,
+  faLongArrowAltRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 function Journey() {
   const [isLoading, setIsLoading] = useState(false);
@@ -9,8 +12,8 @@ function Journey() {
   const handleClick = () => {
     setIsLoading(true);
     setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
+      window.location.href = "/journeying";
+    }, 3000);
   };
 
   return (
@@ -18,8 +21,8 @@ function Journey() {
       <Link className="left-arrow" to="/">
         <FontAwesomeIcon icon={faLongArrowAltLeft} />
       </Link>
-     
-      <div className='spotify' onClick={handleClick}>
+
+      <div className="spotify" onClick={handleClick}>
         {isLoading ? (
           <div className="loading-animation">
             Connecting
@@ -27,7 +30,7 @@ function Journey() {
           </div>
         ) : (
           <>
-            <FontAwesomeIcon icon={faLongArrowAltRight} /> 
+            <FontAwesomeIcon icon={faLongArrowAltRight} />
             <span>Login with Spotify</span>
             <FontAwesomeIcon icon={faLongArrowAltLeft} />
           </>
@@ -38,11 +41,11 @@ function Journey() {
 }
 
 const LoadingDots = () => {
-  const [dots, setDots] = useState('');
+  const [dots, setDots] = useState("");
 
   React.useEffect(() => {
     const intervalId = setInterval(() => {
-      setDots(prevDots => prevDots === '...' ? '' : prevDots + '.');
+      setDots((prevDots) => (prevDots === "..." ? "" : prevDots + "."));
     }, 500);
 
     return () => clearInterval(intervalId);
