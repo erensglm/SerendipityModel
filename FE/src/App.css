@@ -97,6 +97,11 @@ li {
   src: url("./fonts/arcades.TTF") format("truetype");
 }
 
+@font-face {
+  font-family: "arcades2";
+  src: url("./fonts/arcades2.otf") format("truetype");
+}
+
 .title-container {
   text-align: center;
   margin-top: 50px;
@@ -106,6 +111,18 @@ li {
   font-family: "arcades", sans-serif;
   font-size: 60px;
   color: #b784b7;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Standard */
+}
+
+.result-title {
+  font-family: "arcades2", sans-serif;
+  font-size: 40px;
+  color: pink;
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
   -khtml-user-select: none; /* Konqueror HTML */
