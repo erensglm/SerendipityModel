@@ -1,17 +1,57 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLongArrowAltLeft } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faLongArrowAltLeft,
+  faLongArrowAltRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 function Journey() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      window.location.href = "/journeying";
+    }, 3000);
+  };
+
   return (
     <div>
-      <Link className="left-arrow" to="/"> 
+      <Link className="left-arrow" to="/">
         <FontAwesomeIcon icon={faLongArrowAltLeft} />
       </Link>
-      <div>projenin çalıştığı kısım, spotify yönlendirmesi falan yapılacak</div>
+
+      <div className="spotify" onClick={handleClick}>
+        {isLoading ? (
+          <div className="loading-animation">
+            Connecting
+            <LoadingDots />
+          </div>
+        ) : (
+          <>
+            <FontAwesomeIcon icon={faLongArrowAltRight} />
+            <span>Login with Spotify</span>
+            <FontAwesomeIcon icon={faLongArrowAltLeft} />
+          </>
+        )}
+      </div>
     </div>
   );
 }
+
+const LoadingDots = () => {
+  const [dots, setDots] = useState("");
+
+  React.useEffect(() => {
+    const intervalId = setInterval(() => {
+      setDots((prevDots) => (prevDots === "..." ? "" : prevDots + "."));
+    }, 500);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  return <span>{dots}</span>;
+};
 
 export default Journey;

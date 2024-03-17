@@ -6,26 +6,29 @@ import "../../App.css"
 
 const Home = () => {
   return (
-    <ol>
-      <li>
-        <Link className="arrow" to="/journey"> {/* Link componentini kullanarak "/journey" sayfasına yönlendirme */}
-          <FontAwesomeIcon icon={faLongArrowAltRight} /> 
-          Login with spotify
-        </Link>
-      </li>
-      <li>
-        <Link className="arrow" to="/serendipity"> {/* Link componentini kullanarak "/serendipity" sayfasına yönlendirme */}
-          <FontAwesomeIcon icon={faLongArrowAltRight} /> 
-          What is the Serendipity?
-        </Link>
-      </li>
-      <li>
-        <Link className="arrow" to="/about"> {/* Link componentini kullanarak "/about" sayfasına yönlendirme */}
-          <FontAwesomeIcon icon={faLongArrowAltRight} /> 
-          Who are we?
-        </Link>
-      </li>
-    </ol>
+    <div className="home-container">
+      <div className="title">SERENDIPITY</div>
+      <ol>
+        <li>
+          <Link className="arrow" to="/journey">
+            <FontAwesomeIcon icon={faLongArrowAltRight} /> 
+            Login with Spotify
+          </Link>
+        </li>
+        <li>
+          <Link className="arrow" to="/serendipity">
+            <FontAwesomeIcon icon={faLongArrowAltRight} /> 
+            What is Serendipity?
+          </Link>
+        </li>
+        <li>
+          <Link className="arrow" to="/about">
+            <FontAwesomeIcon icon={faLongArrowAltRight} /> 
+            Who are we?
+          </Link>
+        </li>
+      </ol>
+    </div>
   );
 }
 
