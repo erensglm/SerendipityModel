@@ -1,51 +1,47 @@
 import os
-import json
-import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.cache_handler import FlaskSessionCacheHandler
+from spotipy import Spotify
+from spotipy.oauth2 import SpotifyOAuth
 import spotipy.util as util
+from flask import Flask, session, url_for, request, redirect, jsonify
+import json
+app =Flask(__name__)
+app.config['SECRET_KEY']= os.urandom(64)
 
-cid = "b962e9a2dfd84b49b1fb8be051f51580"
-secret = "abc4a22b37584663b76de6f37bb5dfcd"
+cid = '9411dc2624284ba9a4ca325dc63ce651'
+secret = 'fa29270bc22048819b99c43147af4db0'
+redirect_uri='http://localhost:5000/callback'
+scope = 'user-top-read playlist-modify-public '
 
-os.environ['SPOTIPY_CLIENT_ID'] = cid
-os.environ['SPOTIPY_CLIENT_SECRET'] = secret
-os.environ['SPOTIPY_REDIRECT_URI'] = 'http://localhost:8888/callback'
-username = ""
+cache_handler= FlaskSessionCacheHandler(session)
+sp_oauth= SpotifyOAuth(
+    client_id=cid,
+    client_secret=secret,
+    scope=scope,
+    redirect_uri=redirect_uri,
+    cache_handler=cache_handler,
+    show_dialog=True) 
+sp=Spotify(auth_manager=sp_oauth)
+@app.route('/')
+def home():
+    if not sp_oauth.validate_token(cache_handler.get_cached_token()):
+        auth_url=sp_oauth.get_authorize_url()
+        return redirect(auth_url)
+    return redirect(url_for('get_songs'))
+@app.route('/callback')
+def callback():
+    sp_oauth.get_access_token(request.args['code'])
+    return redirect(url_for('get_songs'))
 
-client_credentials_manager = SpotifyClientCredentials(client_id=cid, client_secret=secret)
-sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+@app.route('/get_songs')
+def get_songs():
+    if not sp_oauth.validate_token(cache_handler.get_cached_token()):
+        auth_url = sp_oauth.get_authorize_url()
+        return redirect(auth_url)
+    results = sp.current_user_top_tracks(limit=20, offset=0, time_range='long_term')
+    song_data = [{'id': i, 'name': song['name'], 'year': song['album']['release_date'][:4]} for i, song in enumerate(results['items'])]
+    return jsonify(song_data)
 
-scope = 'user-top-read playlist-modify-public'
 
-# Önceki json dosyasını sil(eğer varsa):
-if os.path.exists('top50_data.json'):
-    os.remove('top50_data.json')
-
-# Önceki kullanıcı oturumunu temizle(eğer varsa):
-if os.path.exists('.cache'):
-    os.remove('.cache')
-
-token = util.prompt_for_user_token(username, scope, client_id=cid, client_secret=secret, redirect_uri='http://localhost:8888/callback')
-
-if token:
-    sp = spotipy.Spotify(auth=token)
-    results = sp.current_user_top_tracks(limit=5, offset=0, time_range='long_term') #long/medium/short ayarı buradan yapılıyor.
-
-    top_tracks_list = []
-
-    for song in results['items']:
-        album_info = {
-            #JSON outputları için filtreleme
-            "name": song['album']['name'],
-            "id": song['album']['id'],
-            "year": song['album']['release_date'][:4],
-            "link":song['album']['external_urls']
-        }
-        top_tracks_list.append(album_info)
-
-    # Yeni json dosyası oluşturmak için:
-    with open('top50_data.json', 'w', encoding='utf-8') as f:
-        json.dump(top_tracks_list, f, ensure_ascii=False, indent=4)
-
-else:
-    print("Can't get token for", username)
+if __name__=='__main__':
+    app.run(debug=True)
