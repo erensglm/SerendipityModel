@@ -24,7 +24,6 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "./FE/node_modules/eslint-config-react-app/base.js",
       "react-app/jest"
     ]
   },
