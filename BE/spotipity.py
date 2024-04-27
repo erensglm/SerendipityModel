@@ -3,7 +3,7 @@ from spotipy.cache_handler import FlaskSessionCacheHandler
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
 import spotipy.util as util
-from flask import Flask, session, url_for, request, redirect, jsonify
+from flask import Flask, session, url_for, request, redirect, jsonify, Response
 import json
 app =Flask(__name__)
 app.config['SECRET_KEY']= os.urandom(64)
@@ -39,9 +39,12 @@ def get_songs():
         auth_url = sp_oauth.get_authorize_url()
         return redirect(auth_url)
     results = sp.current_user_top_tracks(limit=20, offset=0, time_range='long_term')
-    song_data = [{'id': i, 'name': song['name'], 'year': song['album']['release_date'][:4]} for i, song in enumerate(results['items'])]
-    return jsonify(song_data)
-
+    song_data = []
+    for i, song in enumerate(results['items']):
+        song_info = {'id': i, 'name': song['name'], 'year': song['album']['release_date'][:4]}
+        song_data.append(song_info)
+    json_data = json.dumps(song_data, ensure_ascii=False)
+    return Response(json_data, content_type='application/json; charset=utf-8')
 
 if __name__=='__main__':
     app.run(debug=True)
