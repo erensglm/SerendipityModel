@@ -38,7 +38,7 @@ def get_songs():
     if not sp_oauth.validate_token(cache_handler.get_cached_token()):
         auth_url = sp_oauth.get_authorize_url()
         return redirect(auth_url)
-    results = sp.current_user_top_tracks(limit=20, offset=0, time_range='long_term')
+    results = sp.current_user_top_tracks(limit=5, offset=0, time_range='long_term')
     song_data = []
     for i, song in enumerate(results['items']):
         song_info = {'id': i, 'name': song['name'], 'year': song['album']['release_date'][:4]}
