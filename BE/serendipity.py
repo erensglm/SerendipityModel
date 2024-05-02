@@ -62,14 +62,27 @@ def get_songs():
     song_data = []
     for i, song in enumerate(results['items']):
         song_info = {'id': i, 'name': song['name'], 'year': song['album']['release_date'][:4]}
+
+        # Sanatçı bilgilerini al
+        artists = [artist['name'] for artist in song['artists']]
+        song_info['artists'] = artists
+
+
+        audio_features = sp.audio_features(song['id'])[0]
+        song_info.update(audio_features)
+
+        song_info['popularity'] = song['popularity']
+
+        song_info['url'] = song['external_urls']['spotify']
+
         song_data.append(song_info)
-        
-        # Firestore'a şarkıyı ekle
+
         doc_ref = db.collection('songs').document()
         doc_ref.set(song_info)
     
     json_data = json.dumps(song_data, ensure_ascii=False)
     return Response(json_data, content_type='application/json; charset=utf-8')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
