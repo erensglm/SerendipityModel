@@ -21,10 +21,11 @@ function Journeying() {
     };
 
     const app = initializeApp(firebaseConfig);
+
     const db = getFirestore(app);
 
     const fetchData = async () => {
-      const songsCollectionRef = collection(db, 'songs');
+      const songsCollectionRef = collection(db, 'recommended');
       const snapshot = await getDocs(songsCollectionRef);
       const songsData = snapshot.docs.map(doc => doc.data());
       setData(songsData);
@@ -44,7 +45,7 @@ function Journeying() {
           <li key={index}>
             <a className="arrow" href={item.url} target="_blank" rel="noopener noreferrer">
               <FontAwesomeIcon icon={faLongArrowAltRight} />
-              {item.artists.join(', ')} - {item.name} ({item.year})
+                {item.name} ({item.year})
             </a>
           </li>
         ))}
