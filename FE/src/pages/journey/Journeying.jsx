@@ -27,7 +27,7 @@ function Journeying() {
     const fetchData = async () => {
       const songsCollectionRef = collection(db, 'recommended');
       const snapshot = await getDocs(songsCollectionRef);
-      const songsData = snapshot.docs.map(doc => doc.data());
+      const songsData = snapshot.docs.slice(0, 5).map(doc => doc.data());
       setData(songsData);
     };
 
