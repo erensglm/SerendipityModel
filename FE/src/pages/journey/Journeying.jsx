@@ -39,7 +39,7 @@ function Journeying() {
       <ol>
         <li>
           <br />
-          <Link className="arrow" to={`/`}>
+          <Link className="arrow" to={`http://127.0.0.1:5000/create_playlist`}>
             Click to create playlist with more.
             <FontAwesomeIcon icon={faLongArrowAltRight} />
           </Link>
