@@ -9,7 +9,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/": {"origins": ""}})
 app.config['SECRET_KEY'] = os.urandom(64)
 
 cred = credentials.Certificate("./serendipity-0-firebase-adminsdk-14fzt-004a797afa.json")
@@ -31,11 +31,22 @@ sp_oauth = SpotifyOAuth(
     show_dialog=True)
 sp = Spotify(auth_manager=sp_oauth)
 
+
 def delete_old_songs():
-    # Eski şarkıları Firestore'dan sil
-    old_songs = db.collection('songs').stream()
-    for song in old_songs:
-        song.reference.delete()
+    # Eğer 'recommended' koleksiyonu varsa, eski şarkıları sil
+    recommended_ref = db.collection('recommended')
+    if recommended_ref.get():
+        old_songs_recommended = recommended_ref.stream()
+        for song in old_songs_recommended:
+            song.reference.delete()
+
+    # 'songs' koleksiyonundan da eski şarkıları sil
+    songs_ref = db.collection('songs')
+    if songs_ref.get():
+        old_songs = db.collection('songs').stream()
+        for song in old_songs:
+            song.reference.delete()
+
 
 @app.route('/')
 def home():
@@ -56,7 +67,7 @@ def get_songs():
         auth_url = sp_oauth.get_authorize_url()
         return redirect(auth_url)
 
-    delete_old_songs()  # Her uygulama başladığında eski kayıtları temizle
+      # Her uygulama başladığında eski kayıtları temizle
 
     results = sp.current_user_top_tracks(limit=5, offset=0, time_range='long_term')
     song_data = []
@@ -79,10 +90,8 @@ def get_songs():
 
         doc_ref = db.collection('songs').document()
         doc_ref.set(song_info)
-    
-    json_data = json.dumps(song_data, ensure_ascii=False)
-    return Response(json_data, content_type='application/json; charset=utf-8')
-
+    return Response("<script>window.close();</script>")
 
 if __name__ == '__main__':
     app.run(debug=True)
+    delete_old_songs()
