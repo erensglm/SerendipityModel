@@ -4,26 +4,12 @@ import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLongArrowAltLeft, faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons';
+import { db } from "./firebase";
 
 function Journeying() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const firebaseConfig = {
-      apiKey: "AIzaSyDOtvven2KQD9e1pb9mgQUU1qtZsj9TwHM",
-      authDomain: "serendipity-0.firebaseapp.com",
-      databaseURL: "https://serendipity-0-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "serendipity-0",
-      storageBucket: "serendipity-0.appspot.com",
-      messagingSenderId: "308753367961",
-      appId: "1:308753367961:web:1c668fbaae58963f1c0908",
-      measurementId: "G-7L3GY2TL5K"
-    };
-
-    const app = initializeApp(firebaseConfig);
-
-    const db = getFirestore(app);
-
     const fetchData = async () => {
       const songsCollectionRef = collection(db, 'recommended');
       const snapshot = await getDocs(songsCollectionRef);
@@ -45,7 +31,7 @@ function Journeying() {
           <li key={index}>
             <a className="arrow" href={item.url} target="_blank" rel="noopener noreferrer">
               <FontAwesomeIcon icon={faLongArrowAltRight} />
-                {item.name} ({item.year})
+              {item.name} ({item.year})
             </a>
           </li>
         ))}
