@@ -19,7 +19,7 @@ db = firestore.client()
 cid = '9411dc2624284ba9a4ca325dc63ce651'
 secret = 'fa29270bc22048819b99c43147af4db0'
 redirect_uri = 'http://localhost:5000/callback'
-scope = 'user-top-read playlist-modify-public'
+scope = 'user-top-read playlist-modify-public playlist-modify-private user-read-email user-read-private'
 
 cache_handler = FlaskSessionCacheHandler(session)
 sp_oauth = SpotifyOAuth(
@@ -31,15 +31,7 @@ sp_oauth = SpotifyOAuth(
     show_dialog=True)
 sp = Spotify(auth_manager=sp_oauth)
 
-
 def delete_old_songs():
-    # Eğer 'recommended' koleksiyonu varsa, eski şarkıları sil
-    recommended_ref = db.collection('recommended')
-    if recommended_ref.get():
-        old_songs_recommended = recommended_ref.stream()
-        for song in old_songs_recommended:
-            song.reference.delete()
-
     # 'songs' koleksiyonundan da eski şarkıları sil
     songs_ref = db.collection('songs')
     if songs_ref.get():
@@ -90,8 +82,24 @@ def get_songs():
 
         doc_ref = db.collection('songs').document()
         doc_ref.set(song_info)
-    return Response("<script>window.close();</script>")
+    
+    return redirect('/create_playlist')
+@app.route('/create_playlist')
+def create_playlist():
+    collection_ref = db.collection('recommended')  # Firestore'daki koleksiyonunuzun adı
+    track_uris = []
+    playlist_name = 'Serendipity'
+
+    # Firestore'dan belirli alanları içeren belgeleri çekme
+    docs = collection_ref.get()
+
+    for doc in docs:
+        url = doc.to_dict().get('url')
+        track_uris.append(url)
+    playlist = sp.user_playlist_create(sp.current_user()['id'], playlist_name, public=True)
+    sp.playlist_add_items(playlist['id'], track_uris)
+    return("Playlist created and tracks added successfully!")
 
 if __name__ == '__main__':
-    app.run(debug=True)
     delete_old_songs()
+    app.run(debug=True)
