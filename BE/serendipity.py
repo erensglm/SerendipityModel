@@ -59,9 +59,9 @@ def delete_old_songs():
         for song in old_songs:
             song.reference.delete()
 
-    recommended_ref = db.collection('recommended_songs')
+    recommended_ref = db.collection('recommended')
     if recommended_ref.get():
-        recommended_songs = db.collection('recommended_songs').stream()
+        recommended_songs = db.collection('recommended').stream()
         for song in recommended_songs:
             song.reference.delete()
 
@@ -184,7 +184,7 @@ def get_songs():
         auth_url = sp_oauth.get_authorize_url()
         return redirect(auth_url)
 
-    results = sp.current_user_top_tracks(limit=5, offset=0, time_range='long_term')
+    results = sp.current_user_top_tracks(limit=5, offset=0, time_range='short_term')
     song_data = []
     for i, song in enumerate(results['items']):
         song_info = {'id': i, 'name': song['name'], 'year': song['album']['release_date'][:4]}
@@ -204,7 +204,7 @@ def get_songs():
 
         doc_ref = db.collection('songs').document()
         doc_ref.set(song_info)
-    time.sleep(5)
+    time.sleep(2)
     return redirect('/predict')
 
 # Öneri algoritması
