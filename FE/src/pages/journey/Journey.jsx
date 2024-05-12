@@ -5,33 +5,24 @@ import {
   faLongArrowAltLeft,
   faLongArrowAltRight,
 } from "@fortawesome/free-solid-svg-icons";
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import { db } from "./firebase";
 
 function Journey() {
   const [isLoading, setIsLoading] = useState(false);
-  const [retryCount, setRetryCount] = useState(1);
-
-  useEffect(() => {
-    const intervalId = setInterval(async () => {
-      console.log("Deneme no:", retryCount);
-      const recommendedRef = collection(db, 'recommended');
-      const recommendedSnapshot = await getDocs(recommendedRef);
-      if (!recommendedSnapshot.empty) {
-        clearInterval(intervalId); // Stop the interval if data found
-        window.location.href = "/journeying";
-      } else {
-        console.log("No recommended data found.");
-        setRetryCount(prevRetryCount => prevRetryCount + 1); // Increment the retry count
-      }
-    }, 7000); // 7 seconds interval
-
-    return () => clearInterval(intervalId); // Cleanup function to clear interval on unmount
-  }, [retryCount]); // Dependency array includes retryCount to re-run effect when it changes
+  const [transitioning, setTransitioning] = useState(false); 
 
   const handleClick = async () => {
     setIsLoading(true);
-    window.open("http://127.0.0.1:5000", "_blank");
+    setTransitioning(true);
+
+    const popup = window.open("http://localhost:5000/get_songs", "_blank");
+
+    const intervalId = setInterval(() => {
+      if (popup.closed) {
+        clearInterval(intervalId);
+        setIsLoading(false);
+        setTransitioning(false); 
+      }
+    }, 2000);
   };
 
   return (
@@ -41,12 +32,13 @@ function Journey() {
       </Link>
 
       <div className="spotify" onClick={handleClick}>
-        {isLoading ? (
+        {isLoading && (
           <div className="loading-animation">
             Connecting
             <LoadingDots />
           </div>
-        ) : (
+        )}
+        {!isLoading && !transitioning && ( 
           <>
             <FontAwesomeIcon icon={faLongArrowAltRight} />
             <span>Login with Spotify</span>
