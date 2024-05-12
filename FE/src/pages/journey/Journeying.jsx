@@ -1,50 +1,70 @@
 import React, { useState, useEffect } from 'react';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLongArrowAltLeft, faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons';
-import { db } from "./firebase";
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from './firebase';
 
-function Journeying() {
-  const [data, setData] = useState([]);
+function LoadingAnimation() {
+  const [dots, setDots] = useState('');
 
   useEffect(() => {
-    const fetchData = async () => {
-      const songsCollectionRef = collection(db, 'recommended');
-      const snapshot = await getDocs(songsCollectionRef);
-      const songsData = snapshot.docs.slice(0, 5).map(doc => doc.data());
-      setData(songsData);
-    };
+    const interval = setInterval(() => {
+      setDots(prevDots => {
+        if (prevDots === '...') return '.';
+        else if (prevDots === '..') return '...';
+        else return '..';
+      });
+    }, 500);
 
-    fetchData();
+    return () => clearInterval(interval);
   }, []);
 
+  return <p>We are working on{dots}</p>;
+}
+
+function Journeying() {
+  const [tryCount, setTryCount] = useState(0); 
+  const [showMessage, setShowMessage] = useState(false);
+  const intervalTime = 7000;
+
+  const redirectToResultsPage = async () => {
+    const songsCollectionRef = collection(db, 'recommended');
+    const snapshot = await getDocs(songsCollectionRef);
+
+
+    if (!snapshot.empty || tryCount >= 3) {
+      snapshot.forEach((doc) => {
+        console.log(doc.id, '=>', doc.data());
+      });
+      setShowMessage(true);
+    } else {
+      console.log('it will try again.');
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTryCount(prevCount => prevCount + 1); 
+      console.log('Try count:', tryCount + 1);
+      redirectToResultsPage(); 
+    }, intervalTime);
+
+    return () => clearInterval(interval); 
+  }, [tryCount]); 
+
+  useEffect(() => {
+    if (showMessage) {
+      const redirectTimeout = setTimeout(() => {
+        console.log('Something happened.');
+        window.location.href = '/results';
+      }, 2000);
+
+      return () => clearTimeout(redirectTimeout);
+    }
+  }, [showMessage]);
+
   return (
-    <div>
-      <div className="result-title">The result of your journey</div>
-      <Link className="left-arrow" to="/">
-        <FontAwesomeIcon icon={faLongArrowAltLeft} />
-      </Link>
-      <ol>
-        {data.map((item, index) => (
-          <li key={index}>
-            <a className="arrow" href={item.url} target="_blank" rel="noopener noreferrer">
-              <FontAwesomeIcon icon={faLongArrowAltRight} />
-              {item.name} ({item.year})
-            </a>
-          </li>
-        ))}
-      </ol>
-      <ol>
-        <li>
-          <br />
-          <Link className="arrow" to={`http://127.0.0.1:5000/create_playlist`}>
-            Click to create playlist with more.
-            <FontAwesomeIcon icon={faLongArrowAltRight} />
-          </Link>
-        </li>
-      </ol>
+    <div className='spotify'>
+      {showMessage && <div className='spotify'>Something happened</div>}
+      {!showMessage && <LoadingAnimation />}
     </div>
   );
 }
