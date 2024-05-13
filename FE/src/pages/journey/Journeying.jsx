@@ -21,9 +21,9 @@ function LoadingAnimation() {
 }
 
 function Journeying() {
-  const [tryCount, setTryCount] = useState(0); 
+  const [tryCount, setTryCount] = useState(0);
   const [showMessage, setShowMessage] = useState(false);
-  const intervalTime = 7000;
+  const intervalTime = 5000;
 
   const redirectToResultsPage = async () => {
     const songsCollectionRef = collection(db, 'recommended');
@@ -42,13 +42,13 @@ function Journeying() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTryCount(prevCount => prevCount + 1); 
+      setTryCount(prevCount => prevCount + 1);
       console.log('Try count:', tryCount + 1);
-      redirectToResultsPage(); 
+      redirectToResultsPage();
     }, intervalTime);
 
-    return () => clearInterval(interval); 
-  }, [tryCount]); 
+    return () => clearInterval(interval);
+  }, [tryCount]);
 
   useEffect(() => {
     if (showMessage) {
