@@ -130,3 +130,18 @@ li {
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Standard */
 }
+
+.serendipity_cssontent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  color: #FDDE55;
+  padding: 20px;
+  font-size: 15px;
+}
+
+.serendipity_cssontent:hover {
+  cursor: not-allowed;
+  overflow: hidden;
+}
