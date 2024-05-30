@@ -1,7 +1,4 @@
 import os
-import time
-import json
-from spotipy.oauth2 import SpotifyClientCredentials
 from collections import defaultdict
 import firebase_admin
 from firebase_admin import credentials, firestore
@@ -12,10 +9,9 @@ from scipy.spatial.distance import cdist
 from spotipy.cache_handler import FlaskSessionCacheHandler
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
-from flask import Flask, session, request, redirect, Response, jsonify
-from flask_cors import CORS
+from flask import Flask, session, request, redirect
 import pickle
-
+import time
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(64)
 
@@ -45,10 +41,10 @@ genre_data = pd.read_csv('C:/Users/mteks/OneDrive/Masaüstü/python/SerendipityM
 year_data = pd.read_csv('C:/Users/mteks/OneDrive/Masaüstü/python/SerendipityModel/Model/data_by_year.csv')
 
 # KMeans ve PCA modellerinin yüklenmesi
-with open('kmeans_model.sav', 'rb') as f:
+with open('C:/Users/mteks/OneDrive/Masaüstü/python/SerendipityModel/Model/kmeans_model.sav', 'rb') as f:
     kmeans_model = pickle.load(f)
 
-with open('pca_model.sav', 'rb') as f:
+with open('C:/Users/mteks/OneDrive/Masaüstü/python/SerendipityModel/Model/pca_model.sav', 'rb') as f:
     pca_model = pickle.load(f)
 
 # Eskimiş şarkıları silen fonksiyon
@@ -127,7 +123,7 @@ def flatten_dict_list(dict_list):
 
     return flattened_dict
 
-def recommend_songs(song_list, spotify_data, n_songs=10):
+def recommend_songs(song_list, spotify_data, n_songs=100):
     metadata_cols = ['name', 'year', 'artists']
     song_dict = flatten_dict_list(song_list)
 
@@ -166,7 +162,7 @@ def create_playlist():
         track_uris.append(url)
     
     # Spotify kullanıcı çalma listesi oluşturma
-    playlist = sp.user_playlist_create(sp.current_user()['id'], playlist_name, public=True)
+    playlist = sp.user_playlist_create(sp.current_user()['id'], playlist_name, public=False)
     sp.playlist_add_items(playlist['id'], track_uris)
     
     return("Playlist created and tracks added successfully!")
@@ -184,7 +180,7 @@ def get_songs():
         auth_url = sp_oauth.get_authorize_url()
         return redirect(auth_url)
 
-    results = sp.current_user_top_tracks(limit=5, offset=0, time_range='short_term')
+    results = sp.current_user_top_tracks(limit=10, offset=0, time_range='long_term')
     song_data = []
     for i, song in enumerate(results['items']):
         song_info = {'id': i, 'name': song['name'], 'year': song['album']['release_date'][:4]}
@@ -204,6 +200,7 @@ def get_songs():
 
         doc_ref = db.collection('songs').document()
         doc_ref.set(song_info)
+       
     time.sleep(2)
     return redirect('/predict')
 
@@ -211,7 +208,7 @@ def get_songs():
 @app.route('/predict')
 def predict():
     all_song_list = []  # Tüm şarkıların listesi
-    docs = db.collection('songs').limit(5).stream()
+    docs = db.collection('songs').limit(10).stream()
     for doc in docs:
         song_data = doc.to_dict()
         yearD = song_data.get('year')
@@ -249,7 +246,7 @@ def predict():
             doc_ref = db.collection('recommended').document(str(id_counter))  # 'id' değeri olarak id_counter kullanılıyor
             doc_ref.set(song_info)
             id_counter += 1  # Bir sonraki id için sayaçı artır
-    return 'Prediction completed'        
+    return "Prediction Completed"   
 
 # Uygulamayı çalıştırma
 if __name__ == '__main__':
