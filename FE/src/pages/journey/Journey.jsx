@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faLongArrowAltLeft,
-  faLongArrowAltRight,
-} from "@fortawesome/free-solid-svg-icons";
+import { faLongArrowAltLeft, faLongArrowAltRight } from "@fortawesome/free-solid-svg-icons";
 
 function Journey() {
   const [isLoading, setIsLoading] = useState(false);
-  const [transitioning, setTransitioning] = useState(false); 
+  const navigate = useNavigate();
 
-  const handleClick = async () => {
-    setIsLoading(true);
-    setTransitioning(true);
+  useEffect(() => {
+    if (isLoading) {
+      const popup = window.open("http://localhost:5000/get_songs", "_blank");
 
-    const popup = window.open("http://localhost:5000/get_songs", "_blank");
+      const checkPopup = () => {
+        if (popup.closed) {
+          setIsLoading(false);
+          navigate("/journeying");
+        }
+      };
 
-    const intervalId = setInterval(() => {
-      if (popup.closed) {
+      const intervalId = setInterval(checkPopup, 2000);
+
+
+      return () => {
         clearInterval(intervalId);
-        setIsLoading(false);
-        setTransitioning(false); 
-      }
-    }, 2000);
-  };
+        popup.close();
+      };
+    }
+  }, [isLoading, navigate]);
 
   return (
     <div>
@@ -31,14 +34,12 @@ function Journey() {
         <FontAwesomeIcon icon={faLongArrowAltLeft} />
       </Link>
 
-      <div className="spotify" onClick={handleClick}>
-        {isLoading && (
+      <div className="spotify" onClick={() => setIsLoading(true)}>
+        {isLoading ? (
           <div className="loading-animation">
-            Connecting
-            <LoadingDots />
+            Connecting<LoadingDots />
           </div>
-        )}
-        {!isLoading && !transitioning && ( 
+        ) : (
           <>
             <FontAwesomeIcon icon={faLongArrowAltRight} />
             <span>Login with Spotify</span>
@@ -50,10 +51,12 @@ function Journey() {
   );
 }
 
+
+
 const LoadingDots = () => {
   const [dots, setDots] = useState("");
 
-  useEffect(() => {
+  React.useEffect(() => {
     const intervalId = setInterval(() => {
       setDots((prevDots) => (prevDots === "..." ? "" : prevDots + "."));
     }, 500);

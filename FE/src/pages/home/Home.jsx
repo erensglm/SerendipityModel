@@ -12,7 +12,7 @@ const Home = () => {
         <li>
           <Link className="arrow" to="/journey">
             <FontAwesomeIcon icon={faLongArrowAltRight} /> 
-            Login with Spotify
+            Start the Journey
           </Link>
         </li>
         <li>
