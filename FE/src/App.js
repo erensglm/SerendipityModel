@@ -6,6 +6,7 @@ import Journeying from "./pages/journey/Journeying";
 import Serendipity from "./pages/serendipity/Serendipity";
 import About from "./pages/about/About";
 import background from "./background.mp4";
+import Results from "./pages/journey/Results";
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
             <Route path="/journeying" element={<Journeying />} />
             <Route path="/serendipity" element={<Serendipity />} />
             <Route path="/about" element={<About />} />
+            <Route path="/results" element={<Results />} />
           </Routes>
         </div>
       </div>
