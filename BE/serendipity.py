@@ -165,7 +165,24 @@ def create_playlist():
     playlist = sp.user_playlist_create(sp.current_user()['id'], playlist_name, public=False)
     sp.playlist_add_items(playlist['id'], track_uris)
     
-    return("Playlist created and tracks added successfully!")
+    # HTML response with JavaScript to close the tab after 3 seconds
+    content = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Playlist Created</title>
+    </head>
+    <body>
+        <h1>Playlist created and tracks added successfully!</h1>
+        <script type="text/javascript">
+            setTimeout(function() {
+                window.close();
+            }, 3000);
+        </script>
+    </body>
+    </html>
+    """
+    return content
 
 # Spotify yetkilendirme geri dönüşü
 @app.route('/callback')
@@ -262,7 +279,6 @@ def predict():
     <body>
         <h1>Prediction Completed</h1>
         <script>
-            // 2 saniye sonra sekmeyi kapat
             setTimeout(function() {
                 window.close();
             }, 2000);
