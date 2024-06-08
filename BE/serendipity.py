@@ -36,15 +36,15 @@ sp_oauth = SpotifyOAuth(
     cache_handler=cache_handler,
     show_dialog=True)
 sp = Spotify(auth_manager=sp_oauth)
-data = pd.read_csv("C:/Users/mteks/OneDrive/Masaüstü/python/SerendipityModel/Model/birlesmis_data.csv")
-genre_data = pd.read_csv('C:/Users/mteks/OneDrive/Masaüstü/python/SerendipityModel/Model/data_by_genres.csv')
-year_data = pd.read_csv('C:/Users/mteks/OneDrive/Masaüstü/python/SerendipityModel/Model/data_by_year.csv')
+data = pd.read_csv("../Model/birlesmis_data.csv")
+genre_data = pd.read_csv('../Model/data_by_genres.csv')
+year_data = pd.read_csv('../Model/data_by_year.csv')
 
 # KMeans ve PCA modellerinin yüklenmesi
-with open('C:/Users/mteks/OneDrive/Masaüstü/python/SerendipityModel/Model/kmeans_model.sav', 'rb') as f:
+with open('../BE/kmeans_model.sav', 'rb') as f:
     kmeans_model = pickle.load(f)
 
-with open('C:/Users/mteks/OneDrive/Masaüstü/python/SerendipityModel/Model/pca_model.sav', 'rb') as f:
+with open('../BE/pca_model.sav', 'rb') as f:
     pca_model = pickle.load(f)
 
 # Eskimiş şarkıları silen fonksiyon
