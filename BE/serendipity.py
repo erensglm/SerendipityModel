@@ -217,19 +217,22 @@ def predict():
 
         # Her bir döngü adımında şarkıyı all_song_list'e ekleyin
         all_song_list.append({'name': nameD, 'year': yearD})
+    
     request_data = all_song_list
+
     def get_song_url(name, year):
-    # Şarkıyı Spotify'da arayın
+        # Şarkıyı Spotify'da arayın
         query1 = f"track:{name} year:{year}"
         results1 = sp.search(q=query1, limit=1)
 
-    # Sonuçlar varsa, ilk sonucu alın
+        # Sonuçlar varsa, ilk sonucu alın
         if results1['tracks']['items']:
             track_info1 = results1['tracks']['items'][0]
             track_url1 = track_info1['external_urls']['spotify']
             return track_url1
         else:
             return None
+    
     # Tüm şarkıları tek seferde recommend_songs fonksiyonuna gönderin
     recommendations = recommend_songs(all_song_list, data)
 
@@ -246,7 +249,28 @@ def predict():
             doc_ref = db.collection('recommended').document(str(id_counter))  # 'id' değeri olarak id_counter kullanılıyor
             doc_ref.set(song_info)
             id_counter += 1  # Bir sonraki id için sayaçı artır
-    return "Prediction Completed"   
+
+    # İşlem tamamlandıktan sonra HTML yanıtı döndür
+    html_content = """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Prediction Completed</title>
+    </head>
+    <body>
+        <h1>Prediction Completed</h1>
+        <script>
+            // 2 saniye sonra sekmeyi kapat
+            setTimeout(function() {
+                window.close();
+            }, 2000);
+        </script>
+    </body>
+    </html>
+    """
+    return html_content   
 
 # Uygulamayı çalıştırma
 if __name__ == '__main__':
